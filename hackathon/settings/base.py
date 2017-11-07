@@ -14,7 +14,7 @@ SECRET_KEY = 'gmmxy&3e-qzs9c_&-9qh(ut9#qj$dd4!mc&_%!5or*9&sxbg^8'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['hackathon-roockalb-api.herokuapp.com']
 
 
 # Application definition
