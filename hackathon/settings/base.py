@@ -29,6 +29,7 @@ INSTALLED_APPS = [
 
     # local
     'accounts',
+    'corsheaders',
 
     # third-party
     'graphene_django',
@@ -116,3 +117,8 @@ SOCIAL_AUTH_USER_MODEL = 'accounts.User'
 
 JWT_EXPIRATION_DELTA = datetime.timedelta(days=1)
 JWT_ALGORITHM = 'HS256'
+
+CORS_ORIGIN_WHITELIST = (
+    'localhost:8000',
+    'localhost:3000'
+)
