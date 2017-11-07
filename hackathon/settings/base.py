@@ -14,7 +14,7 @@ SECRET_KEY = 'gmmxy&3e-qzs9c_&-9qh(ut9#qj$dd4!mc&_%!5or*9&sxbg^8'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['hackathon-roockalb-api.herokuapp.com']
+ALLOWED_HOSTS = ['hackathon-roockalb-api.herokuapp.com', 'localhost']
 
 
 # Application definition
@@ -43,6 +43,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # third-party
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'hackathon.urls'
@@ -101,8 +105,13 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
+
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
 GRAPHENE = {
     'SCHEMA': 'hackathon.schema.schema',
@@ -111,7 +120,7 @@ GRAPHENE = {
     ]
 }
 
-#Set default User model
+# Set default User model
 AUTH_USER_MODEL = 'accounts.User'
 SOCIAL_AUTH_USER_MODEL = 'accounts.User'
 
