@@ -1,7 +1,10 @@
 import graphene
+import facebook
+import requests
+import json
 
 from .schema import UserType
-from .models import User
+from .models import User, SocialAssociation
 from hackathon.utils import obtain_jwt
 
 
@@ -77,3 +80,124 @@ class RegisterMutation(graphene.Mutation):
             user.save()
 
         return RegisterMutation(errors=errors)
+
+
+class FacebookLoginMutation(graphene.Mutation):
+    class Arguments:
+        access_token = graphene.String()
+
+    token = graphene.String()
+    errors = graphene.List(graphene.String)
+    user = graphene.Field(lambda: UserType)
+
+    @staticmethod
+    def mutate(root, info, **args):
+        access_token = args.get('access_token')
+        token = None
+        user = None
+        errors = []
+
+        if not access_token:
+            errors.append("Access token must be specified")
+
+        if not errors:
+            try:
+                graph = facebook.GraphAPI(
+                    access_token=access_token,
+                    version='2.7'
+                )
+                data = graph.get_object(
+                    id='me',
+                    fields='first_name,last_name,email'
+                )
+                try:
+                    social_account = SocialAssociation.objects.get(
+                        social_id=data.get('id')
+                    )
+                    user = social_account.user
+                    token = obtain_jwt(user.id)
+
+                except SocialAssociation.DoesNotExist:
+                    try:
+                        user = User.objects.get(
+                            email=data.get('email')
+                        )
+                    except User.DoesNotExist:
+                        user = User.objects.create(
+                            email=data.get('email'),
+                            first_name=data.get('first_name'),
+                            last_name=data.get('last_name'),
+                            username=data.get('email').split('@')[0]
+                        )
+
+                    social_account = SocialAssociation.objects.create(
+                        social_id=data.get('id'),
+                        user=user,
+                        social_network='facebook'
+                    )
+
+                    token = obtain_jwt(user.id)
+
+            except facebook.GraphAPIError:
+                errors.append("Invalid access token")
+
+        return FacebookLoginMutation(token=token, errors=errors, user=user)
+
+
+class GoogleLoginMutation(graphene.Mutation):
+    class Arguments:
+        access_token = graphene.String()
+
+    token = graphene.String()
+    errors = graphene.List(graphene.String)
+    user = graphene.Field(lambda: UserType)
+
+    @staticmethod
+    def mutate(root, info, **args):
+        access_token = args.get('access_token')
+        token = None
+        user = None
+        errors = []
+
+        if not access_token:
+            errors.append("Access token must be specified")
+
+        if not errors:
+            response = requests.get(
+                "https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=%s" %
+                access_token
+            )
+            if response.status_code == 200:
+                data = json.loads(response.text)
+
+                try:
+                    social_account = SocialAssociation.objects.get(
+                        social_id=data.get('id')
+                    )
+                    user = social_account.user
+                    token = obtain_jwt(user.id)
+
+                except SocialAssociation.DoesNotExist:
+                    try:
+                        user = User.objects.get(
+                            email=data.get('email')
+                        )
+                    except User.DoesNotExist:
+                        user = User.objects.create(
+                            email=data.get('email'),
+                            first_name=data.get('first_name'),
+                            last_name=data.get('last_name'),
+                            username=data.get('email').split('@')[0]
+                        )
+
+                    social_account = SocialAssociation.objects.create(
+                        social_id=data.get('id'),
+                        user=user,
+                        social_network='google'
+                    )
+
+                    token = obtain_jwt(user.id)
+            elif response.status_code == 401:
+                errors.append("Invalid access token")
+
+        return GoogleLoginMutation(token=token, errors=errors, user=user)
