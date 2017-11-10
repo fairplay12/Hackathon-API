@@ -138,5 +138,6 @@ JWT_ALGORITHM = 'HS256'
 
 CORS_ORIGIN_WHITELIST = (
     'localhost:8000',
-    'localhost:3000'
+    'localhost:3000',
+    'hackathon-react.herokuapp.com',
 )
