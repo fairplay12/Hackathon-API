@@ -212,6 +212,8 @@ class UpdateUserMutation(graphene.Mutation):
         expirience = graphene.Int()
         username = graphene.String()
         email = graphene.String()
+        about = graphene.String()
+        phone = graphene.String()
 
     errors = graphene.List(graphene.String)
     user = graphene.Field(lambda: UserType)
@@ -225,6 +227,8 @@ class UpdateUserMutation(graphene.Mutation):
         expirience = args.get('expirience')
         username = args.get('username')
         email = args.get('email')
+        about = args.get('about')
+        phone = args.get('phone')
         errors = []
         user = None
 
@@ -244,7 +248,13 @@ class UpdateUserMutation(graphene.Mutation):
             errors.append('Username must be specified')
 
         if not email:
-            errors.apped('Email must be specified')
+            errors.append('Email must be specified')
+
+        if not about:
+            errors.append('About must be specified')
+
+        if not phone:
+            errors.append('Phone must be specified')
 
         if not errors:
             try:
@@ -258,6 +268,8 @@ class UpdateUserMutation(graphene.Mutation):
             user.expirience = expirience
             user.username = username
             user.email = email
+            user.about = about
+            user.phone = phone
             user.save()
 
         return UpdateUserMutation(errors=errors, user=user)

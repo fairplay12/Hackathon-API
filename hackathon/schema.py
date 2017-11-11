@@ -7,7 +7,13 @@ from accounts.mutations import (LoginMutation, RegisterMutation,
 from sport.schema import Query as SportQuery
 from sport.mutations import (CreateSportCategoryMutation,
                              CreateSportSectionMutation,
-                             CreateAchievementMutation)
+                             CreateAchievementMutation,
+                             CreateCustomAchievementMutation,
+                             CreateChampionshipMutation,
+                             UpdateSportSectionMutation,
+                             UpdateCustomAchievementMutation,
+                             UpdateChampionshipMutation,
+                             DeleteInstanceMutation)
 
 
 class Query(AccountsQuery, SportQuery, graphene.ObjectType):
@@ -22,7 +28,12 @@ class Mutation(graphene.ObjectType):
     create_sport_category = CreateSportCategoryMutation.Field()
     create_sport_section = CreateSportSectionMutation.Field()
     create_achievement = CreateAchievementMutation.Field()
+    create_custom_achievement = CreateCustomAchievementMutation.Field()
+    update_sport_section = UpdateSportSectionMutation.Field()
+    update_custom_achievement = UpdateCustomAchievementMutation.Field()
+    update_championship = UpdateChampionshipMutation.Field()
     update_user = UpdateUserMutation.Field()
+    delete_instance = DeleteInstanceMutation.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

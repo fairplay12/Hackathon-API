@@ -1,8 +1,9 @@
 import graphene
 from graphene_django.types import DjangoObjectType
-from hackathon.decorators import login_required
+# from hackathon.decorators import login_required
 
-from .models import SportCategory, SportSection, Achievement, Championship
+from .models import (SportCategory, SportSection, Achievement, Championship,
+                     CustomAchievement)
 
 
 class SportCategoryType(DjangoObjectType):
@@ -23,6 +24,11 @@ class AchievementType(DjangoObjectType):
 class ChampionshipType(DjangoObjectType):
     class Meta:
         model = Championship
+
+
+class CustomAchievementType(DjangoObjectType):
+    class Meta:
+        model = CustomAchievement
 
 
 class Query:
