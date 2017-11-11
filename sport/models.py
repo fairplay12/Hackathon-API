@@ -6,6 +6,10 @@ class SportCategory(models.Model):
         max_length=255,
     )
     short_description = models.TextField()
+    image = models.ImageField(
+        upload_to='categories/images/',
+        null=True,
+    )
 
     class Meta:
         verbose_name = 'Sport Category'
@@ -25,6 +29,10 @@ class SportSection(models.Model):
     )
     description = models.TextField()
     max_ppl_in_section = models.PositiveSmallIntegerField()
+    image = models.ImageField(
+        upload_to='sections/images/',
+        null=True,
+    )
 
     def __str__(self):
         return str(self.name)
