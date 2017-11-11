@@ -26,4 +26,7 @@ class Query:
             return None
 
     def resolve_me(self, info):
-        return info.context.user
+        if info.context.user.is_authenticated:
+            return info.context.user
+        else:
+            return None
