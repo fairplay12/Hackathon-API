@@ -11,7 +11,10 @@ class User(AbstractUser):
         null=True,
         blank=True
     )
-    expirience = models.PositiveSmallIntegerField()
+    expirience = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True,
+    )
     avatar = models.ImageField(
         upload_to='users/avatar/',
         null=True,
