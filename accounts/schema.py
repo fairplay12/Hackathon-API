@@ -1,5 +1,5 @@
 import graphene
-from graphene_django.types import
+from graphene_django.types import DjangoObjectType
 
 from hackathon.decorators import login_required
 from .models import User
@@ -14,7 +14,7 @@ class UserType(DjangoObjectType):
         model = User
 
     def resole_avatar(self, info):
-        retirn '{}{}'.format(settings.SITE_URL, self.avatar.url)
+        return '{}{}'.format(settings.SITE_URL, self.avatar.url)
 
 
 class Query:
