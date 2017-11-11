@@ -1,4 +1,7 @@
 import graphene
+import base64
+
+from django.core.files.base import ContentFile
 
 from .schema import (SportSectionType, ChampionshipType,
                      CustomAchievementType)
@@ -12,6 +15,7 @@ class CreateSportCategoryMutation(graphene.Mutation):
     class Arguments:
         name = graphene.String()
         short_description = graphene.String()
+        image = graphene.String()
 
     errors = graphene.List(graphene.String)
 
@@ -19,6 +23,7 @@ class CreateSportCategoryMutation(graphene.Mutation):
     def mutate(root, info, **args):
         name = args.get('name')
         short_description = args.get('short_description')
+        image = args.get('image')
         errors = []
 
         if not name:
@@ -27,8 +32,20 @@ class CreateSportCategoryMutation(graphene.Mutation):
         if not short_description:
             errors.append('Description must be specified')
 
+        if not image:
+            errors.append('Image must be specified')
+
         if not errors:
-            SportCategory.objects.create(**args)
+            category = SportCategory.objects.create(**args)
+            if image:
+                img_format, img_str = image.split(';base64,')
+                ext = img_format.split('/')['-1']
+                image = ContentFile(base64.b64decode(
+                    img_str), name=str(category.id) + ext)
+
+                category.image = image
+
+            category.save()
 
         return CreateSportCategoryMutation(errors=errors)
 
@@ -39,6 +56,7 @@ class CreateSportSectionMutation(graphene.Mutation):
         name = graphene.String()
         description = graphene.String()
         max_ppl_in_section = graphene.Int()
+        image = graphene.String()
 
     errors = graphene.List(graphene.String)
 
@@ -48,6 +66,7 @@ class CreateSportSectionMutation(graphene.Mutation):
         name = args.get('name')
         description = args.get('description')
         max_ppl_in_section = args.get('max_ppl_in_section')
+        image = args.get('image')
         errors = []
 
         if not category_id:
@@ -62,12 +81,23 @@ class CreateSportSectionMutation(graphene.Mutation):
         if not max_ppl_in_section:
             errors.append('Max people in section must be specified')
 
+        if not image:
+            errors.append('Image must be specified')
+
         if not errors:
             user = info.context.user
             section = SportSection.objects.create(**args)
             user.sport_sections.add(section)
             user.is_trainer = True
             user.save()
+            if image:
+                img_format, img_str = image.split(';base64,')
+                ext = img_format.split('/')['-1']
+                image = ContentFile(base64.b64decode(
+                    img_str), name=str(section.id) + ext)
+
+                section.image = image
+            section.save()
 
         return CreateSportSectionMutation(errors=errors)
 

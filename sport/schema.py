@@ -8,7 +8,6 @@ from .models import (Achievement, Championship, CustomAchievement,
 # from hackathon.decorators import login_required
 
 
-
 class SportCategoryType(DjangoObjectType):
     class Meta:
         model = SportCategory

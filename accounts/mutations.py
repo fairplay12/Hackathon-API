@@ -2,6 +2,9 @@ import graphene
 import facebook
 import requests
 import json
+import base64
+
+from django.core.files.base import ContentFile
 
 from .schema import UserType
 from .models import User, SocialAssociation
@@ -214,6 +217,7 @@ class UpdateUserMutation(graphene.Mutation):
         email = graphene.String()
         about = graphene.String()
         phone = graphene.String()
+        avatar = graphene.String()
 
     errors = graphene.List(graphene.String)
     user = graphene.Field(lambda: UserType)
@@ -229,6 +233,7 @@ class UpdateUserMutation(graphene.Mutation):
         email = args.get('email')
         about = args.get('about')
         phone = args.get('phone')
+        avatar = args.get('avatar')
         errors = []
         user = None
 
@@ -256,6 +261,9 @@ class UpdateUserMutation(graphene.Mutation):
         if not phone:
             errors.append('Phone must be specified')
 
+        if not avatar:
+            errors.append('Avatar must be specified')
+
         if not errors:
             try:
                 user = User.objects.get(pk=user_id)
@@ -270,6 +278,15 @@ class UpdateUserMutation(graphene.Mutation):
             user.email = email
             user.about = about
             user.phone = phone
+
+            if avatar:
+                img_format, img_str = avatar.split(';base64,')
+                ext = img_format.split('/')['-1']
+                avatar = ContentFile(base64.b64decode(
+                    img_str), name=str(user.id) + ext)
+
+                user.avatar = avatar
+
             user.save()
 
         return UpdateUserMutation(errors=errors, user=user)
