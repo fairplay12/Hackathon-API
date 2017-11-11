@@ -143,3 +143,6 @@ CORS_ORIGIN_WHITELIST = (
     'localhost:3000',
     'hackathon-react.herokuapp.com',
 )
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
