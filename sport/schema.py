@@ -5,19 +5,30 @@ from graphene_django.types import DjangoObjectType
 from .models import (Achievement, Championship, CustomAchievement,
                      SportCategory, SportSection)
 
+from django.conf import settings
+
 # from hackathon.decorators import login_required
 
 
 class SportCategoryType(DjangoObjectType):
+    image = graphene.String()
+
     class Meta:
         model = SportCategory
+
+    def resolve_image(self, info):
+        return '{}{}'.format(settings.SITE_URL, self.image.url)
 
 
 class SportSectionType(DjangoObjectType):
     trainers = graphene.List(UserType)
+    image = graphene.String()
 
     def resolve_trainers(self, info):
         return self.users.filter(is_trainer=True)
+
+    def resolve_image(self, info):
+        return '{}{}'.format(settings.SITE_URL, self.image.url)
 
     class Meta:
         model = SportSection
