@@ -1,9 +1,12 @@
 import graphene
+from accounts.schema import UserType
 from graphene_django.types import DjangoObjectType
+
+from .models import (Achievement, Championship, CustomAchievement,
+                     SportCategory, SportSection)
+
 # from hackathon.decorators import login_required
 
-from .models import (SportCategory, SportSection, Achievement, Championship,
-                     CustomAchievement)
 
 
 class SportCategoryType(DjangoObjectType):
@@ -12,6 +15,11 @@ class SportCategoryType(DjangoObjectType):
 
 
 class SportSectionType(DjangoObjectType):
+    trainers = graphene.List(UserType)
+
+    def resolve_trainers(self, info):
+        return self.users.filter(is_trainer=True)
+
     class Meta:
         model = SportSection
 
