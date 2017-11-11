@@ -16,6 +16,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['hackathon-roockalb-api.herokuapp.com', 'localhost']
 
+SITE_URL = 'http://localhost:8000'
 
 # Application definition
 
