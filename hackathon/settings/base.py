@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     # local
     'accounts',
     'sport',
+    'management',
 
     # third-party
     'graphene_django',
