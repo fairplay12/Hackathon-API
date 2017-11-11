@@ -29,10 +29,11 @@ INSTALLED_APPS = [
 
     # local
     'accounts',
-    'corsheaders',
+    'sport',
 
     # third-party
     'graphene_django',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
