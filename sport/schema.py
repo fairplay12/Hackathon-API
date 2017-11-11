@@ -41,10 +41,10 @@ class CustomAchievementType(DjangoObjectType):
 
 class Query:
     sport_categories = graphene.List(SportCategoryType)
-    sport_sections = graphene.List(SportSectionType, id=graphene.ID())
+    sport_sections = graphene.List(SportSectionType, category_id=graphene.ID())
 
     def resolve_sport_categories(self, info):
         return SportCategory.objects.all()
 
-    def resolve_sport_sections(self, info, id):
-        return SportSection.objects.filter(category_id=id)
+    def resolve_sport_sections(self, info, category_id):
+        return SportSection.objects.filter(category_id=category_id)

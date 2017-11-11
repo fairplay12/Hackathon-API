@@ -63,7 +63,11 @@ class CreateSportSectionMutation(graphene.Mutation):
             errors.append('Max people in section must be specified')
 
         if not errors:
-            SportSection.objects.create(**args)
+            user = info.context.user
+            section = SportSection.objects.create(**args)
+            user.sport_sections.add(section)
+            user.is_trainer = True
+            user.save()
 
         return CreateSportSectionMutation(errors=errors)
 
