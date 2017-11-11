@@ -27,10 +27,10 @@ class ChampionshipType(DjangoObjectType):
 
 class Query:
     sport_categories = graphene.List(SportCategoryType)
-    sport_sections = graphene.List(SportSectionType)
+    sport_sections = graphene.List(SportSectionType, id=graphene.ID())
 
     def resolve_sport_categories(self, info):
         return SportCategory.objects.all()
 
-    def resolve_sport_sections(self, info):
-        return SportSection.objects.all()
+    def resolve_sport_sections(self, info, id):
+        return SportSection.objects.filter(category_id=id)

@@ -64,3 +64,28 @@ class CreateSportSectionMutation(graphene.Mutation):
             SportSection.objects.create(**args)
 
         return CreateSportSectionMutation(errors=errors)
+
+
+class CreateAchievementMutation(graphene.Mutation):
+    class Arguments:
+        user_id = graphene.ID()
+        name = graphene.String()
+
+    errors = graphene.List(graphene.String)
+
+    @staticmethod
+    def mutate(root, info, **args):
+        user_id = args.get('user_id')
+        name = args.get('name')
+        errors = []
+
+        if not user_id:
+            errors.append('Achievement must have relation with user')
+
+        if not name:
+            errors.append('Name must be specified')
+
+        if not errors:
+            Achievement.objects.create(**args)
+
+        return CreateAchievementMutation(errors=errors)

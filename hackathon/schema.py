@@ -2,16 +2,15 @@ import graphene
 
 from accounts.schema import Query as AccountsQuery
 from accounts.mutations import (LoginMutation, RegisterMutation,
-                                FacebookLoginMutation, GoogleLoginMutation)
+                                FacebookLoginMutation, GoogleLoginMutation,
+                                UpdateUserMutation)
 from sport.schema import Query as SportQuery
 from sport.mutations import (CreateSportCategoryMutation,
-                             CreateSportSectionMutation)
+                             CreateSportSectionMutation,
+                             CreateAchievementMutation)
 
 
-class Query(AccountsQuery, RegisterMutation, FacebookLoginMutation,
-            GoogleLoginMutation,
-            SportQuery, CreateSportCategoryMutation,
-            CreateSportSectionMutation, graphene.ObjectType):
+class Query(AccountsQuery, SportQuery, graphene.ObjectType):
     pass
 
 
@@ -22,6 +21,8 @@ class Mutation(graphene.ObjectType):
     google_login = GoogleLoginMutation.Field()
     create_sport_category = CreateSportCategoryMutation.Field()
     create_sport_section = CreateSportSectionMutation.Field()
+    create_achievement = CreateAchievementMutation.Field()
+    update_user = UpdateUserMutation.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

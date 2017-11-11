@@ -6,6 +6,7 @@ import json
 from .schema import UserType
 from .models import User, SocialAssociation
 from hackathon.utils import obtain_jwt
+from hackathon.decorators import login_required
 
 
 class LoginMutation(graphene.Mutation):
@@ -201,3 +202,62 @@ class GoogleLoginMutation(graphene.Mutation):
                 errors.append("Invalid access token")
 
         return GoogleLoginMutation(token=token, errors=errors, user=user)
+
+
+class UpdateUserMutation(graphene.Mutation):
+    class Arguments:
+        user_id = graphene.ID()
+        first_name = graphene.String()
+        last_name = graphene.String()
+        expirience = graphene.Int()
+        username = graphene.String()
+        email = graphene.String()
+
+    errors = graphene.List(graphene.String)
+    user = graphene.Field(lambda: UserType)
+
+    @staticmethod
+    @login_required
+    def mutate(root, info, **args):
+        user_id = args.get('user_id')
+        first_name = args.get('first_name')
+        last_name = args.get('last_name')
+        expirience = args.get('expirience')
+        username = args.get('username')
+        email = args.get('email')
+        errors = []
+        user = None
+
+        if not user_id:
+            errors.append('User id must be specified')
+
+        if not first_name:
+            errors.append('First name must be specified')
+
+        if not last_name:
+            errors.append('Last name must be specified')
+
+        if not expirience:
+            errors.append('Expirience must be specified')
+
+        if not username:
+            errors.append('Username must be specified')
+
+        if not email:
+            errors.apped('Email must be specified')
+
+        if not errors:
+            try:
+                user = User.objects.get(pk=user_id)
+            except User.DoesNotExist:
+                errors.append('That user doesn\'t exists')
+                return UpdateUserMutation(errors=errors, user=user)
+
+            user.first_name = first_name
+            user.last_name = last_name
+            user.expirience = expirience
+            user.username = username
+            user.email = email
+            user.save()
+
+        return UpdateUserMutation(errors=errors, user=user)
