@@ -8,15 +8,24 @@ class User(AbstractUser):
     sport_sections = models.ManyToManyField(
         'sport.SportSection',
         related_name='users',
-        null=True,
+        blank=True
+    )
+    custom_achievements = models.ManyToManyField(
+        'sport.CustomAchievement',
+        related_name='users',
         blank=True
     )
     expirience = models.PositiveSmallIntegerField(
-        null=True,
-        blank=True,
+        default=0
     )
     avatar = models.ImageField(
         upload_to='users/avatar/',
+        null=True,
+        blank=True,
+    )
+    about = models.TextField()
+    phone = models.CharField(
+        max_length=20,
         null=True,
         blank=True,
     )
