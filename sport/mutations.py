@@ -1,4 +1,5 @@
 import base64
+import json
 
 import graphene
 from accounts.models import User
@@ -56,6 +57,7 @@ class CreateSportSectionMutation(graphene.Mutation):
         category_id = graphene.ID()
         name = graphene.String()
         description = graphene.String()
+        location = graphene.String()
         # image = graphene.String()
 
     errors = graphene.List(graphene.String)
@@ -84,6 +86,7 @@ class CreateSportSectionMutation(graphene.Mutation):
 
         if not errors:
             user = info.context.user
+            args['location'] = json.loads(args.get('location'))
             section = SportSection.objects.create(**args)
             user.sport_sections.add(section)
             user.is_trainer = True
