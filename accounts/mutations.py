@@ -79,6 +79,8 @@ class RegisterMutation(graphene.Mutation):
             errors.append('Last name must be specified')
 
         if not errors:
+            username = "{}{}".format(first_name.lower(), last_name.lower())
+            args['username'] = username
             user = User.objects.create(**args)
             user.set_password(password)
             user.save()

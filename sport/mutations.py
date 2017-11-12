@@ -410,6 +410,7 @@ class BecomeAnAthleteMutation(graphene.Mutation):
 
             for time_id in args.get('time_ids'):
                 time = Time.objects.get(pk=time_id)
+                user.sport_sections.add(time.training.section)
                 time.users.add(user)
 
         return BecomeAnAthleteMutation(
