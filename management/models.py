@@ -28,4 +28,4 @@ class Review(models.Model):
     score = models.PositiveSmallIntegerField()
 
     def __str__(self):
-        return int(self.user.id)
+        return self.user.get_full_name()

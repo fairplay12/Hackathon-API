@@ -7,7 +7,6 @@ from hackathon.decorators import login_required
 
 class CreateReviewMutation(graphene.Mutation):
     class Arguments:
-        user_id = graphene.ID()
         section_id = graphene.ID()
         text = graphene.String()
         score = graphene.Int()
@@ -17,14 +16,10 @@ class CreateReviewMutation(graphene.Mutation):
     @staticmethod
     @login_required
     def mutate(root, info, **args):
-        user_id = args.get('user_id')
         section_id = args.get('section_id')
         text = args.get('text')
         score = args.get('score')
         errors = []
-
-        if not user_id:
-            errors.append('User id must be specified')
 
         if not section_id:
             errors.append('Section id must be specified')
@@ -36,6 +31,7 @@ class CreateReviewMutation(graphene.Mutation):
             errors.append('Score must be specified')
 
         if not errors:
+            args['user'] = info.context.user
             Review.objects.create(**args)
 
         return CreateReviewMutation(errors=errors)
