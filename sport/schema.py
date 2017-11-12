@@ -24,7 +24,8 @@ class SportCategoryType(DjangoObjectType):
         model = SportCategory
 
     def resolve_image(self, info):
-        return '{}{}'.format(settings.SITE_URL, self.image.url)
+        if self.image.name:
+            return '{}{}'.format(settings.SITE_URL, self.image.url)
 
 
 class SportSectionType(DjangoObjectType):
@@ -35,7 +36,8 @@ class SportSectionType(DjangoObjectType):
         return self.users.filter(is_trainer=True)
 
     def resolve_image(self, info):
-        return '{}{}'.format(settings.SITE_URL, self.image.url)
+        if self.image.name:
+            return '{}{}'.format(settings.SITE_URL, self.image.url)
 
     class Meta:
         model = SportSection
