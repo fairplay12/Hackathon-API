@@ -9,6 +9,7 @@ from .models import (SportCategory, SportSection, Achievement,
                      Championship, CustomAchievement)
 from accounts.models import User
 from accounts.schema import UserType
+from management.models import Review
 from hackathon.decorators import login_required
 
 
@@ -383,6 +384,12 @@ class DeleteInstanceMutation(graphene.Mutation):
                     Championship.objects.get(pk=instance_id).delete()
                 except Championship.DoesNotExist:
                     errors.append('That championship doesn\'t exists')
+                    return DeleteInstanceMutation(errors=errors)
+            elif instance_type is 7:
+                try:
+                    Review.objects.get(pk=instance_id).delete()
+                except Review.DoesNotExist:
+                    errors.append('That review doesn\'t exists')
                     return DeleteInstanceMutation(errors=errors)
 
         return DeleteInstanceMutation(errors=errors)
