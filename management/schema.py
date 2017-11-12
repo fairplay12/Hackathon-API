@@ -1,13 +1,18 @@
 import graphene
 from graphene_django.types import DjangoObjectType
 
-from .models import Review, Training
+from .models import Review, Time, Training
 
 
 class ReviewType(DjangoObjectType):
 
     class Meta:
         model = Review
+
+
+class TimeType(DjangoObjectType):
+    class Meta:
+        model = Time
 
 
 class TrainingType(DjangoObjectType):
