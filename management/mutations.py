@@ -86,8 +86,6 @@ class CreateTrainingMutation(graphene.Mutation):
     class Arguments:
         section_id = graphene.ID()
         day = graphene.Int()
-        start_time = graphene.String()
-        end_time = graphene.String()
 
     errors = graphene.List(graphene.String)
     training = graphene.Field(lambda: TrainingType)
@@ -97,8 +95,6 @@ class CreateTrainingMutation(graphene.Mutation):
     def mutate(root, info, **args):
         section_id = args.get('section_id')
         day = args.get('day')
-        start_time = args.get('start_time')
-        end_time = args.get('end_time')
         errors = []
         training = None
 
@@ -107,12 +103,6 @@ class CreateTrainingMutation(graphene.Mutation):
 
         if not day:
             errors.append('Day must be specified')
-
-        if not start_time:
-            errors.append('Start time must be specified')
-
-        if not end_time:
-            errors.append('End time must be specified')
 
         if not errors:
             training = Training.objects.create(**args)

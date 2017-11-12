@@ -2,30 +2,34 @@ from django.db import models
 
 
 class Training(models.Model):
+    DAYS = (
+        (1, 'Пн'),
+        (2, 'Вт'),
+        (3, 'Ср'),
+        (4, 'Чт'),
+        (5, 'Пт'),
+        (6, 'Сб'),
+        (7, 'Вс'),
+    )
+
     section = models.ForeignKey(
         'sport.SportSection',
         related_name='trainings'
     )
-    day = models.PositiveSmallIntegerField()
-    start_time = models.CharField(
-        max_length=50,
-    )
-    end_time = models.CharField(
-        max_length=50,
-    )
+    day = models.PositiveSmallIntegerField(choices=DAYS)
 
     def __str__(self):
         return self.section.name
 
 
 class Time(models.Model):
-    sport_section = models.ForeignKey(
-        'sport.SportSection',
-        related_name='trainings_time',
+    training = models.ForeignKey(
+        Training,
+        related_name='training_times',
     )
 
     def __str__(self):
-        return self.sport_section
+        return self.training.get_day_display()
 
 
 class Review(models.Model):

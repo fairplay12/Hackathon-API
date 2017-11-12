@@ -11,9 +11,13 @@ class ReviewType(DjangoObjectType):
 
 
 class TrainingType(DjangoObjectType):
+    day_display = graphene.String()
 
     class Meta:
         model = Training
+
+    def resolve_day_display(self, info):
+        return self.get_day_display()
 
 
 class Query:
