@@ -1,3 +1,4 @@
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 
 
@@ -33,6 +34,8 @@ class SportSection(models.Model):
         upload_to='sections/images/',
         null=True,
     )
+    address = models.CharField(max_length=50)
+    location = JSONField()
 
     def __str__(self):
         return str(self.name)
