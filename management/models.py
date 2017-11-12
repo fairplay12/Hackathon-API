@@ -29,6 +29,7 @@ class Time(models.Model):
     )
     start_time = models.CharField(max_length=25)
     end_time = models.CharField(max_length=25)
+    users = models.ManyToManyField('accounts.User')
 
     def __str__(self):
         return self.training.get_day_display()
