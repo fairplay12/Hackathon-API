@@ -15,7 +15,7 @@ class Training(models.Model):
     )
 
     def __str__(self):
-        return self.day
+        return self.section.name
 
 
 class Time(models.Model):
