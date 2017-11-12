@@ -27,6 +27,8 @@ class Time(models.Model):
         Training,
         related_name='training_times',
     )
+    start_time = models.CharField(max_length=25)
+    end_time = models.CharField(max_length=25)
 
     def __str__(self):
         return self.training.get_day_display()
