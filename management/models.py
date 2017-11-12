@@ -1,13 +1,12 @@
 from django.db import models
-from django.contrib.postgres.fields import ArrayField, JSONField
 
 
-class Schedule(models.Model):
-    sport_section = models.OneToOneField(
+class Time(models.Model):
+    sport_section = models.ForeignKey(
         'sport.SportSection',
-        related_name='schedule',
+        related_name='trainings_time',
     )
-    time = ArrayField(JSONField())
+    time = models.DateTimeField()
 
     def __str__(self):
         return self.sport_section
