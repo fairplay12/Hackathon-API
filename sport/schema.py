@@ -1,13 +1,20 @@
 import graphene
 from accounts.schema import UserType
+from django.conf import settings
+from django.contrib.postgres.fields import JSONField
+from graphene_django.converter import convert_django_field
 from graphene_django.types import DjangoObjectType
 
 from .models import (Achievement, Championship, CustomAchievement,
                      SportCategory, SportSection)
-
-from django.conf import settings
+from .scalars import LocationScalar
 
 # from hackathon.decorators import login_required
+
+
+@convert_django_field.register(JSONField)
+def convert_location_field(field, registry=None):
+    return LocationScalar()
 
 
 class SportCategoryType(DjangoObjectType):
