@@ -8,13 +8,17 @@ from django.conf import settings
 
 
 class UserType(DjangoObjectType):
-    avatar = graphene.String
+    avatar = graphene.String()
+    full_name = graphene.String()
 
     class Meta:
         model = User
 
-    def resole_avatar(self, info):
+    def resolve_avatar(self, info):
         return '{}{}'.format(settings.SITE_URL, self.avatar.url)
+
+    def resolve_full_name(self, info):
+        return self.get_full_name()
 
 
 class Query:
