@@ -8,6 +8,7 @@ from .schema import (SportSectionType, ChampionshipType,
 from .models import (SportCategory, SportSection, Achievement,
                      Championship, CustomAchievement)
 from accounts.models import User
+from accounts.schema import UserType
 from hackathon.decorators import login_required
 
 
@@ -385,3 +386,42 @@ class DeleteInstanceMutation(graphene.Mutation):
                     return DeleteInstanceMutation(errors=errors)
 
         return DeleteInstanceMutation(errors=errors)
+
+
+class BecomeAnAthleteMutation(graphene.Mutation):
+    class Arguments:
+        user_id = graphene.ID()
+        section_id = graphene.ID()
+
+    errors = graphene.List(graphene.String)
+    user = graphene.Field(lambda: UserType)
+    section = graphene.Field(lambda: SportSectionType)
+
+    @staticmethod
+    @login_required
+    def mutate(root, info, **args):
+        section_id = args.get('section_id')
+        errors = []
+        section = None
+        if not section_id:
+            errors.append('Section id must be specified')
+
+        if not errors:
+            user = info.context.user
+            try:
+                section = SportSection.objects.get(pk=section_id)
+            except SportSection.DoesNotExist:
+                errors.append('That section doesn\'t exists')
+                return BecomeAnAthleteMutation(
+                    errors=errors,
+                    user=user,
+                    section=section,
+                )
+            user.sport_sections.add(section)
+            user.save()
+
+        return BecomeAnAthleteMutation(
+            errors=errors,
+            user=user,
+            section=section,
+        )

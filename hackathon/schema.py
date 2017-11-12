@@ -13,7 +13,7 @@ from sport.mutations import (CreateSportCategoryMutation,
                              UpdateSportSectionMutation,
                              UpdateCustomAchievementMutation,
                              UpdateChampionshipMutation,
-                             DeleteInstanceMutation)
+                             DeleteInstanceMutation, BecomeAnAthleteMutation)
 
 
 class Query(AccountsQuery, SportQuery, graphene.ObjectType):
@@ -34,6 +34,7 @@ class Mutation(graphene.ObjectType):
     update_championship = UpdateChampionshipMutation.Field()
     update_user = UpdateUserMutation.Field()
     delete_instance = DeleteInstanceMutation.Field()
+    become_an_athlete = BecomeAnAthleteMutation.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
