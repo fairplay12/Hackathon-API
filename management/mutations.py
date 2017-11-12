@@ -12,6 +12,7 @@ class CreateReviewMutation(graphene.Mutation):
         score = graphene.Int()
 
     errors = graphene.List(graphene.String)
+    review = graphene.Field(lambda: ReviewType)
 
     @staticmethod
     @login_required
@@ -20,6 +21,7 @@ class CreateReviewMutation(graphene.Mutation):
         text = args.get('text')
         score = args.get('score')
         errors = []
+        review = None
 
         if not section_id:
             errors.append('Section id must be specified')
@@ -32,9 +34,9 @@ class CreateReviewMutation(graphene.Mutation):
 
         if not errors:
             args['user'] = info.context.user
-            Review.objects.create(**args)
+            review = Review.objects.create(**args)
 
-        return CreateReviewMutation(errors=errors)
+        return CreateReviewMutation(errors=errors, review=review)
 
 
 class UpdateReviewMutation(graphene.Mutation):
