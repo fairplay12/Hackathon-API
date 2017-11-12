@@ -16,10 +16,14 @@ class TimeType(DjangoObjectType):
 
 
 class TrainingType(DjangoObjectType):
+    day = graphene.Int()
     day_display = graphene.String()
 
     class Meta:
         model = Training
+
+    def resolve_day(self, info):
+        return self.day
 
     def resolve_day_display(self, info):
         return self.get_day_display()
