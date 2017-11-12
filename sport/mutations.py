@@ -56,19 +56,19 @@ class CreateSportSectionMutation(graphene.Mutation):
         category_id = graphene.ID()
         name = graphene.String()
         description = graphene.String()
-        max_ppl_in_section = graphene.Int()
-        image = graphene.String()
+        # image = graphene.String()
 
     errors = graphene.List(graphene.String)
+    section = graphene.Field(lambda: SportSectionType)
 
     @staticmethod
     def mutate(root, info, **args):
         category_id = args.get('category_id')
         name = args.get('name')
         description = args.get('description')
-        max_ppl_in_section = args.get('max_ppl_in_section')
-        image = args.get('image')
+        # image = args.get('image')
         errors = []
+        section = None
 
         if not category_id:
             errors.append('Section must have relation with category')
@@ -79,11 +79,8 @@ class CreateSportSectionMutation(graphene.Mutation):
         if not description:
             errors.append('Description must be specified')
 
-        if not max_ppl_in_section:
-            errors.append('Max people in section must be specified')
-
-        if not image:
-            errors.append('Image must be specified')
+        # if not image:
+        #     errors.append('Image must be specified')
 
         if not errors:
             user = info.context.user
@@ -91,16 +88,16 @@ class CreateSportSectionMutation(graphene.Mutation):
             user.sport_sections.add(section)
             user.is_trainer = True
             user.save()
-            if image:
-                img_format, img_str = image.split(';base64,')
-                ext = img_format.split('/')['-1']
-                image = ContentFile(base64.b64decode(
-                    img_str), name=str(section.id) + ext)
+            # if image:
+            #     img_format, img_str = image.split(';base64,')
+            #     ext = img_format.split('/')['-1']
+            #     image = ContentFile(base64.b64decode(
+            #         img_str), name=str(section.id) + ext)
+            #
+            #     section.image = image
+            # section.save()
 
-                section.image = image
-            section.save()
-
-        return CreateSportSectionMutation(errors=errors)
+        return CreateSportSectionMutation(errors=errors, section=section)
 
 
 class CreateAchievementMutation(graphene.Mutation):

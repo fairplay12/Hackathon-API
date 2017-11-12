@@ -29,13 +29,13 @@ class SportSection(models.Model):
         max_length=255
     )
     description = models.TextField()
-    max_ppl_in_section = models.PositiveSmallIntegerField()
+    max_ppl_in_section = models.PositiveSmallIntegerField(default=15)
     image = models.ImageField(
         upload_to='sections/images/',
         null=True,
     )
     address = models.CharField(max_length=50)
-    location = JSONField()
+    location = JSONField(null=True)
 
     def __str__(self):
         return str(self.name)
