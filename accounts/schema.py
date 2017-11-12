@@ -15,7 +15,8 @@ class UserType(DjangoObjectType):
         model = User
 
     def resolve_avatar(self, info):
-        return '{}{}'.format(settings.SITE_URL, self.avatar.url)
+        if self.avatar.name:
+            return '{}{}'.format(settings.SITE_URL, self.avatar.url)
 
     def resolve_full_name(self, info):
         return self.get_full_name()
