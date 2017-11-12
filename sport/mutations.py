@@ -1,16 +1,15 @@
-import graphene
 import base64
 
-from django.core.files.base import ContentFile
-
-from .schema import (SportSectionType, ChampionshipType,
-                     CustomAchievementType)
-from .models import (SportCategory, SportSection, Achievement,
-                     Championship, CustomAchievement)
+import graphene
 from accounts.models import User
 from accounts.schema import UserType
-from management.models import Review
+from django.core.files.base import ContentFile
 from hackathon.decorators import login_required
+from management.models import Review, Time
+
+from .models import (Achievement, Championship, CustomAchievement,
+                     SportCategory, SportSection)
+from .schema import ChampionshipType, CustomAchievementType, SportSectionType
 
 
 class CreateSportCategoryMutation(graphene.Mutation):
@@ -397,38 +396,22 @@ class DeleteInstanceMutation(graphene.Mutation):
 
 class BecomeAnAthleteMutation(graphene.Mutation):
     class Arguments:
-        user_id = graphene.ID()
-        section_id = graphene.ID()
+        time_ids = graphene.List(graphene.ID)
 
     errors = graphene.List(graphene.String)
-    user = graphene.Field(lambda: UserType)
-    section = graphene.Field(lambda: SportSectionType)
 
     @staticmethod
     @login_required
     def mutate(root, info, **args):
-        section_id = args.get('section_id')
         errors = []
-        section = None
-        if not section_id:
-            errors.append('Section id must be specified')
 
         if not errors:
             user = info.context.user
-            try:
-                section = SportSection.objects.get(pk=section_id)
-            except SportSection.DoesNotExist:
-                errors.append('That section doesn\'t exists')
-                return BecomeAnAthleteMutation(
-                    errors=errors,
-                    user=user,
-                    section=section,
-                )
-            user.sport_sections.add(section)
-            user.save()
+
+            for time_id in args.get('time_ids'):
+                time = Time.objects.get(pk=time_id)
+                time.users.add(user)
 
         return BecomeAnAthleteMutation(
             errors=errors,
-            user=user,
-            section=section,
         )
