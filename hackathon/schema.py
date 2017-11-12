@@ -16,7 +16,8 @@ from sport.mutations import (CreateSportCategoryMutation,
                              DeleteInstanceMutation, BecomeAnAthleteMutation)
 from management.schema import Query as ManagementQuery
 from management.mutations import (CreateReviewMutation,
-                                  UpdateReviewMutation)
+                                  UpdateReviewMutation,
+                                  CreateTrainingTimeMutation)
 
 
 class Query(AccountsQuery, SportQuery, ManagementQuery, graphene.ObjectType):
@@ -40,6 +41,7 @@ class Mutation(graphene.ObjectType):
     become_an_athlete = BecomeAnAthleteMutation.Field()
     create_review = CreateReviewMutation.Field()
     update_review = UpdateReviewMutation.Field()
+    create_training_time = CreateTrainingTimeMutation.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

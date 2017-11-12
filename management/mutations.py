@@ -1,7 +1,7 @@
 import graphene
 
-from .models import Review
-from .schema import ReviewType
+from .models import Review, Time
+from .schema import ReviewType, TimeType
 from hackathon.decorators import login_required
 
 
@@ -80,3 +80,34 @@ class UpdateReviewMutation(graphene.Mutation):
             review.save()
 
         return UpdateReviewMutation(errors=errors, review=review)
+
+
+class CreateTrainingTimeMutation(graphene.Mutation):
+    class Arguments:
+        sport_section_id = graphene.ID()
+        time = graphene.String()
+
+    errors = graphene.List(graphene.String)
+    training_time = graphene.Field(lambda: TimeType)
+
+    @staticmethod
+    @login_required
+    def mutate(root, info, **args):
+        sport_section_id = args.get('sport_section_id')
+        time = args.get('time')
+        errors = []
+        training_time = None
+
+        if not sport_section_id:
+            errors.append('Section id must be specified')
+
+        if not time:
+            errors.append('Time must be specified')
+
+        if not errors:
+            training_time = Time.objects.create(**args)
+
+        return CreateTrainingTimeMutation(
+            errors=errors,
+            training_time=training_time
+        )
