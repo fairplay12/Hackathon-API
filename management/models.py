@@ -1,12 +1,28 @@
 from django.db import models
 
 
+class Training(models.Model):
+    section = models.ForeignKey(
+        'sport.SportSection',
+        related_name='trainings'
+    )
+    day = models.PositiveSmallIntegerField()
+    start_time = models.CharField(
+        max_length=50,
+    )
+    end_time = models.CharField(
+        max_length=50,
+    )
+
+    def __str__(self):
+        return self.day
+
+
 class Time(models.Model):
     sport_section = models.ForeignKey(
         'sport.SportSection',
         related_name='trainings_time',
     )
-    time = models.DateTimeField()
 
     def __str__(self):
         return self.sport_section
