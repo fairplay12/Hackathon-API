@@ -145,5 +145,5 @@ CORS_ORIGIN_WHITELIST = (
     'hackathon-react.herokuapp.com',
 )
 
-MEDIA_ROOT = os.path.dirname(os.path.join(BASE_DIR, 'media'))
+MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media')
 MEDIA_URL = '/media/'
