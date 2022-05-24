@@ -30,7 +30,7 @@ ptyprocess==0.5.2
 pyasn1==0.3.7
 pycparser==2.18
 Pygments==2.2.0
-PyJWT==1.5.3
+PyJWT==2.4.0
 pytz==2017.3
 requests==2.18.4
 Rx==1.6.0
